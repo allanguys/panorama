@@ -7,91 +7,78 @@
 <meta name="keywords" content="pureCSS3D" />
 <title>pureCSS3D</title>
 
-
 <style type="text/css">
-
   body{background:#000;overflow:hidden;  }
-  .cube_wrap{position:absolute;width:2000px;height:2000px;transform-style: preserve-3d;perspective:500px;left:0;top:0;margin:-500px 0 0 0px;}
-  .cube_box{position:relative; width:2000px;height:2000px;left:0;top:0;transform-style: preserve-3d;1transition:all 2s ease-in;1background:blue;z-index:9;}
-  .cube_side{position:absolute;left:500px;top:500px;display:none; }
-  .cube_side{width:1000px;height:1000px;opacity: 0.5;border:1px solid gold; }
+  .cube_wrap{position:absolute;width:1998px;height:1998px;left:50%;transform-style: preserve-3d;perspective:500px;left:50%;top:50%;margin:-1000px 0 0 -1000px;}
+  .cube_box{position:relative;width:1998px;height:1998px;left:0;top:0;transform-style: preserve-3d;1background:blue;z-index:9;transform: rotateY(36deg);}
+  .cube_side{position:absolute;left:500px;top:500px;display:none;width:1000px;height:1000px;opacity: 0.5;border:1px solid gold; outline:1px solid transparent; }
   .cube_box .front{transform:translate3d(0, 0,-500px);}
   .cube_box .right{transform:rotate3d(0, 1, 0, -90deg) translate3d(0, 0, -500px)}
   .cube_box .left{transform:rotate3d(0, 1, 0, 90deg) translate3d(0, 0, -500px)}
   .cube_box .up{transform:rotate3d(1, 0, 0, -90deg) translate3d(0, 0, -500px)}
   .cube_box .back{transform:rotate3d(0, 1, 0, 180deg) translate3d(0, 0, -500px)}
   .cube_box .down{transform:rotate3d(1, 0, 0, 90deg) translate3d(0, 0, -500px)}
-  
   .control{position:relative; top:10px;left:10px;z-index:999;height:200px}
-  .control span{float:left;padding:10px;font-family:\5FAE\8F6F\96C5\9ED1;font-size:16px;font-weight:bold;color:#fff; }
-  
-  
+  .control button{float:left;padding:10px;font-family:\5FAE\8F6F\96C5\9ED1;font-size:16px;font-weight:bold;color:#333;display:none; }
 </style>
 </head>
 
 
 <body>
   <div class="control">
-     <span onclick="creatCube()">组装立方体</span><span  onclick="scaleCube('0')" style="display:none; ">全景</span><span  onclick="rotateCube()" 1style="display:none; " style="display:none; ">旋转</span>
+     <button onclick="creatCube()" style="display:block; ">组装立方体</button><button  onclick="scaleCube('0')" style="display:none; ">全景</button><button  onclick="rotateCube()"  style="display:none; ">旋转</button>
   </div>
 
 <div class="cube_wrap">
-      <div class="cube_box"  1style="transform: rotateX(1deg) rotateY(1deg);" stye="">
-            <img src="img/pano_f.jpg" class="cube_side front" width="3000px" height="px;" ;>
-            <img src="img/pano_r.jpg" class="cube_side right">
-            <img src="img/pano_l.jpg" class="cube_side left">
-            <img src="img/pano_d.jpg" class="cube_side down"> 
-             <img src="img/pano_u.jpg" class="cube_side up">
-            <img src="img/pano_b.jpg" class="cube_side back"> <!---->
+      <div class="cube_box" >
+            <img src="img/pano_f.jpg" class="cube_side front" width="3072px" >
+            <img src="img/pano_r.jpg" class="cube_side right" width="3072px">
+            <img src="img/pano_l.jpg" class="cube_side left" width="3072px">
+            <img src="img/pano_d.jpg" class="cube_side down" width="3072px"> 
+             <img src="img/pano_u.jpg" class="cube_side up" width="3072px">
+            <img src="img/pano_b.jpg" class="cube_side back" width="3072px">
       </div>      
 </div>
-
-
 <script src="http://ossweb-img.qq.com/images/js/jquery/jquery-1.9.1.min.js" type="text/javascript"></script> 
 <script type="text/javascript">
-//初始化
-function init(){
-   var pageHeight = $('body').height();
-   var pageWidth = $('body').width();
-   $('.cube_box').css({'margin-top':'-'+pageHeight/1.4+'px','margin-left':'-'+pageWidth/2+'px'})
-   console.log(pageHeight)
-}
-// init();
+var rotate = null;
 //组装立方体
 function creatCube(timestamp){
-  $($('.control span')[0]).hide();
-
+  $($('.control button')[0]).hide();
   var i = 0;
   var side = $('.cube_side');
   $('.cube_box').css({'transform':'translateZ(-1200px)'});
+
   var Time = setInterval(function(){
       $(side[i]).fadeIn();
       i++;
       if (i>side.length) {
         clearInterval(Time);
-        $($('.control span')[1]).show();
+        $($('.control button')[1]).show();
+        $($('.control button')[2]).show();
       };
+
   },300)
 };
 
-
+//全景
 function scaleCube(num){
-    $('.cube_box').css({'transform':'translateZ(0px)'});
-    $($('.control span')[2]).show();$($('.control span')[1]).hide();
+    if(!!rotate){cancelAnimationFrame(rotate)};
+    $('.cube_box').css({'transform':' none'})
+    $('.cube_box').css({'transform':'translateZ(0px)','transition':'all 3s linear'});
 };
+//全景
 function rotateCube(num){
   var i = 0;
   var z = $('.cube_box').css('transform');
-  requestAnimationFrame(function step(){
+  rotate = requestAnimationFrame(function step(){
           i = i+0.3;
-         $('.cube_box').css({'transform':'rotateY('+ i +'deg) '+ z});
-         requestAnimationFrame(step)
+          if (i>360) {i=0};
+         $('.cube_box').css({'transform':z + 'rotateY('+ i +'deg) ','transition':'none'});
+         rotate = requestAnimationFrame(step)
     });
 
-}
-
-
-
+};
 </script>
 </body>
 

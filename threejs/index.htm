@@ -1,0 +1,201 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="description" content="threejs" />
+<meta name="keywords" content="threejs" />
+<title>threejs</title>
+<style type="text/css">
+ 
+ body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td{-webkit-text-size-adjust: none;margin:0;padding:0;}body,button,input,select,textarea{font:12px/1.5 tahoma,arial,\5b8b\4f53,sans-serif;}h1,h2,h3,h4,h5,h6{font-size:100%;}address,cite,dfn,em,var{font-style:normal;}code,kbd,pre,samp{font-family:courier new,courier,monospace;}small{font-size:12px;}ul,ol{list-style:none;}a{text-decoration:none;outline:0 none}a:hover{text-decoration:underline;}sup{vertical-align:text-top;}sub{vertical-align:text-bottom;}legend{color:#000;}fieldset,img{border:0;}button,input,select,textarea{font-size:100%;resize: none;}table{border-collapse:collapse;border-spacing:0;}
+ 
+</style>
+</head>
+
+
+<body>
+
+<script src="js/three.js"></script> 
+<script src="js/CSS3DRenderer.js"></script> 
+<script type="text/javascript">
+  	var camera, scene, renderer;
+			var geometry, material, mesh;
+			var target = new THREE.Vector3();
+
+			var lon = 90, lat = 0;
+			var phi = 0, theta = 0;
+
+			var touchX, touchY;
+
+			init();
+			animate();
+
+			function init() {
+
+				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+
+				scene = new THREE.Scene();
+
+				var sides = [
+				    //正面
+					{
+						url: 'img/pano_f.jpg',
+						position: [ -512, 0, 0 ],
+						rotation: [ 0, Math.PI / 2, 0 ]
+					},
+					//背面
+					{
+						url: 'img/pano_b.jpg',
+						position: [ 512, 0, 0 ],
+						rotation: [ 0, -Math.PI / 2, 0 ]
+					},
+					//顶
+					{
+						url: 'img/pano_u.jpg',
+						position: [ 0, 512, 0 ],
+						rotation: [ Math.PI / 2, 0, - Math.PI / 2]
+
+					},
+					//底
+					{
+						url: 'img/pano_d.jpg',
+						position: [ 0, -512, 0 ],
+						rotation: [  Math.PI / 2, Math.PI , - Math.PI / 2 ]
+					},
+					//左面
+					{
+						url: 'img/pano_l.jpg',
+						position: [ 0, 0,  512 ],
+						rotation: [ 0, Math.PI, 0 ]
+					},
+					//右面
+					{
+						url: 'img/pano_r.jpg',
+						position: [ 0, 0, -512 ],
+						rotation: [ 0, 0, 0 ]
+					}
+				];
+
+				for ( var i = 0; i < sides.length; i ++ ) {
+
+					var side = sides[ i ];
+
+					var element = document.createElement( 'img' );
+					element.width = 1026; // 2 pixels extra to close the gap.
+					element.src = side.url;
+
+					var object = new THREE.CSS3DObject( element );
+					object.position.fromArray( side.position );
+					object.rotation.fromArray( side.rotation );
+					scene.add( object );
+
+				}
+
+				renderer = new THREE.CSS3DRenderer();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+
+				//
+
+				document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+				document.addEventListener( 'mousewheel', onDocumentMouseWheel, false );
+
+				document.addEventListener( 'touchstart', onDocumentTouchStart, false );
+				document.addEventListener( 'touchmove', onDocumentTouchMove, false );
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function onDocumentMouseDown( event ) {
+
+				event.preventDefault();
+
+				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+				document.addEventListener( 'mouseup', onDocumentMouseUp, false );
+
+			}
+
+			function onDocumentMouseMove( event ) {
+
+				var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+				var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+
+				lon -= movementX * 0.1;
+				lat += movementY * 0.1;
+
+			}
+
+			function onDocumentMouseUp( event ) {
+
+				document.removeEventListener( 'mousemove', onDocumentMouseMove );
+				document.removeEventListener( 'mouseup', onDocumentMouseUp );
+
+			}
+
+			function onDocumentMouseWheel( event ) {
+
+				camera.fov -= event.wheelDeltaY * 0.05;
+				camera.updateProjectionMatrix();
+
+			}
+
+			function onDocumentTouchStart( event ) {
+
+				event.preventDefault();
+
+				var touch = event.touches[ 0 ];
+
+				touchX = touch.screenX;
+				touchY = touch.screenY;
+
+			}
+
+			function onDocumentTouchMove( event ) {
+
+				event.preventDefault();
+
+				var touch = event.touches[ 0 ];
+
+				lon -= ( touch.screenX - touchX ) * 0.1;
+				lat += ( touch.screenY - touchY ) * 0.1;
+
+				touchX = touch.screenX;
+				touchY = touch.screenY;
+
+			}
+
+			function animate() {
+
+				 requestAnimationFrame( animate );
+
+				//lon +=  0.1;
+				lat = Math.max( - 85, Math.min( 85, lat ) );
+				phi = THREE.Math.degToRad( 90 - lat );
+				theta = THREE.Math.degToRad( lon );
+
+				target.x = Math.sin( phi ) * Math.cos( theta );
+				target.y = Math.cos( phi );
+				target.z = Math.sin( phi ) * Math.sin( theta );
+
+				camera.lookAt( target );
+
+				renderer.render( scene, camera );
+
+			}
+
+</script>
+</body>
+
+</html>
+
+
