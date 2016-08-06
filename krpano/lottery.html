@@ -1,0 +1,55 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+	<title>krpano demo</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<meta http-equiv="x-ua-compatible" content="IE=edge" />
+	<style>
+		@-ms-viewport { width:device-width; }
+		@media only screen and (min-device-width:800px) { html { overflow:hidden; } }
+		html { height:100%;width:100%; }
+		body { height:100%; overflow:hidden; margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#FFFFFF; background-color:#000000; }
+		#pano{height:100%}
+		#controls{position:absolute;top:0;left:0;z-index:99;}
+		</style>
+</head>
+
+
+<body>
+<div id="controls">
+   <button>切换简洁版</button>
+   <button>切换简洁版球面贴图</button>
+   <button>切换全景视频</button>
+</div>
+<div id="pano"></div>
+
+<script src="http://ossweb-img.qq.com/images/js/jquery/jquery-1.9.1.min.js" type="text/javascript"></script> 
+<script src="js/krpano.js"></script>
+<script type="text/javascript">
+   var buttonAr = $('#controls button');
+   //默认加载带调试信息版本
+   embedpano({xml:"panos/tank/demo.xml", target:"pano",id:"pano_demo", html5:"auto", mobilescale:1.0, passQueryParameters:true});
+   //切换到简洁版
+   $(buttonAr[0]).click(function() {
+   	 removepano("pano_demo");
+   	 embedpano({xml:"panos/tank/demo_sample.xml", target:"pano",id:"pano_demo", html5:"auto", mobilescale:1.0, passQueryParameters:true});
+   })
+   //切换到简洁版球面贴图
+   $(buttonAr[1]).click(function  () {
+   	 removepano("pano_demo");
+   	 embedpano({xml:"panos/tank/demo_sphere.xml", target:"pano",id:"pano_demo", html5:"auto", mobilescale:1.0, passQueryParameters:true});
+   })   
+   //切换到视频
+   $(buttonAr[2]).click(function  () {
+   	 removepano("pano_demo");
+   	 embedpano({xml:"panos/tank/demo_video.xml", target:"pano",id:"pano_demo", html5:"auto", mobilescale:1.0, passQueryParameters:true});
+   })
+</script>
+</body>
+
+</html>
+
