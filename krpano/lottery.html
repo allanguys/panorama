@@ -32,12 +32,6 @@
    embedpano({xml:"panos/lottery/lottery.xml", target:"pano",id:"pano_demo", html5:"auto", mobilescale:1.0, passQueryParameters:true});
  
    function showLogo(who){
-   
-       if (who === 'tgideas') {
-          console.log('tgideas')
-       }else{
-          console.log('ieg')
-       };
        $('body').append('<div style="width:100%;height:100%;position:absolute;left:0;top:0;background:rgba(0,0,0,0.8);z-index:999"><div style="position:absolute;width:200px;top:50%;left:50%;margin:-80px 0 0 -100px;color:#fff;text-align:center;font-family:\5FAE\8F6F\96C5\9ED1;"><h5>恭喜！你已找到</h5><img  style="width:200px" src="panos/lottery/find/'+ who +'.png"></div></div>')
    };
 
