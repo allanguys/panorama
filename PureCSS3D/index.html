@@ -28,7 +28,6 @@
   <div class="control">
      <button onclick="creatCube()" style="display:block; ">组装立方体</button><button  onclick="scaleCube('0')" style="display:none; ">全景</button><button  onclick="rotateCube()"  style="display:none; ">旋转</button>
   </div>
-
 <div class="cube_wrap">
       <div class="cube_box" >
             <img src="img/pano_f.jpg" class="cube_side front" width="3072px" >
@@ -67,11 +66,13 @@ function scaleCube(num){
     $('.cube_box').css({'transform':' none'})
     $('.cube_box').css({'transform':'translateZ(0px)','transition':'all 3s linear'});
 };
-//全景
+//旋转
 function rotateCube(num){
   var i = 0;
-  var z = $('.cube_box').css('transform');
-  rotate = requestAnimationFrame(function step(){
+  var z = $('.cube_box')[0].style.transform;
+  var transZRegex = /\.*translateZ\((.*)px\)/i;
+  var num = transZRegex.exec($('.cube_box')[0].style.transform)[1];
+    rotate = requestAnimationFrame(function step(){
           i = i+0.3;
           if (i>360) {i=0};
          $('.cube_box').css({'transform':z + 'rotateY('+ i +'deg) ','transition':'none'});
@@ -79,6 +80,30 @@ function rotateCube(num){
     });
 
 };
+  var moving = false;
+  $(document).on('mousedown', function(e) {
+    x_start = e.pageX;
+    y_start = e.pageY;
+
+    moving = true;
+    e.preventDefault();
+    if(!!rotate){cancelAnimationFrame(rotate)};
+  });
+  $(document).on('mousemove', function(e) {
+    if( moving === true ) {
+      z = $('.cube_box')[0].style.transform;
+      console.log('z'+z)
+      transZRegex = /\.*translateZ\((.*)px\)/i;
+      if (!!transZRegex) { transZ = transZRegex.exec($('.cube_box')[0].style.transform)[1];};
+      x_move = x_start - e.pageX;
+      y_move = y_start - e.pageY;
+      $('.cube_box').css({'transform':'translateZ('+ transZ +'px) rotateX('+ -Math.atan2(y_move, 600)/ Math.PI * 180 +'deg) rotateY('+ Math.atan2(x_move, 600)/ Math.PI * 180 +'deg)','transition':'none'});
+    };
+  }).on('mouseup', function(e) {
+    moving = false;
+    e.preventDefault();
+  });
+
 </script>
 </body>
 
