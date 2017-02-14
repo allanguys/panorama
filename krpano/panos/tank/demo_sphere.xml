@@ -1,0 +1,9 @@
+﻿<krpano onstart="loadscene(tank);" >
+	<scene name="tank">
+        <view fov="75" fovmax="75" fovmin="75" />
+		<image>
+			<sphere url="pano.jpg" />
+		</image>
+	</scene>
+</krpano>
+

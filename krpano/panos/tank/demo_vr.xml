@@ -1,0 +1,19 @@
+﻿<krpano onstart="showlog();" showerrors="true" debugmode="true" data-livestyle-extension="available">
+<action name="startup" autorun="onstart">
+		if(startscene === null OR !scene[get(startscene)], copy(startscene,scene[0].name); );
+		loadscene(get(startscene), null, MERGE);
+</action>
+
+
+	<!-- webvr.xml - WebVR plugin, enter/exit VR buttons, VR cursor, VR setup -->
+	<include url="%HTMLPATH%/js/webvr.xml" />
+
+	<scene name="tank">
+		    <events onloadcomplete="js('console.log(加载完成)');set(events.onloadcomplete,null);"/>	 
+        <view hlookat="0" vlookat="0" fov="75" fovmax="75" fovmin="75" />
+		<preview url="preview.jpg" />
+		<image>
+			<cube url="pano_%s.jpg" />
+		</image>
+	</scene>
+</krpano>

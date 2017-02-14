@@ -1,0 +1,17 @@
+﻿<krpano onstart="showlog();" showerrors="true" debugmode="true" data-livestyle-extension="available">
+<action name="startup" autorun="onstart">
+		if(startscene === null OR !scene[get(startscene)], copy(startscene,scene[0].name); );
+		loadscene(get(startscene), null, MERGE);
+</action>
+
+	<scene name="tank">
+		<events onloadcomplete="js('console.log(全景视频加载完成)');"/>	 
+        <view hlookat="0" vlookat="0" fov="75" fovmax="75" fovmin="75" />
+		<preview url="preview.jpg" />
+		<plugin name="video" url.flash="%HTMLPATH%/js/videoplayer.swf" url.html5="%HTMLPATH%/js/videoplayer.js" videourl="%HTMLPATH%/video/GOT.mp4|GOT.mp3" />
+		<image>
+		    <sphere url="plugin:video" />
+		</image>
+	</scene>
+</krpano>
+

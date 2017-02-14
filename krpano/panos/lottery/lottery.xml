@@ -1,0 +1,20 @@
+﻿<krpano>
+<action name="startup" autorun="onstart">
+		if(startscene === null OR !scene[get(startscene)], copy(startscene,scene[0].name); );
+		loadscene(get(startscene), null, MERGE);
+</action>
+
+	<scene name="tank">
+		<events onloadcomplete="js('loadingDone()');set(events.onloadcomplete,null);"/>	 
+	    <view hlookat="0" vlookat="0"  fov="75" fovmin="20" fovmax="120" />
+
+<plugin name="gyro" devices="html5" keep="true"  url="%SWFPATH%/js/gyro2.js" enabled="true" camroll="true" friction="0.6" velastic="0.0" vrelative="false" onavailable="" />
+
+		<hotspot name="tgideas" url="find/tgideas.png"  scale="0.06"  ath="calc:random*180-180" atv="calc:random*180" zoom="true" onclick="js('showLogo(tgideas)')"/>
+		<hotspot name="ieg" url="find/ieg.png"  scale="0.06"  ath="calc:random*180+180" atv="calc:random*180" zoom="true"  onclick="js('showLogo(ieg)')"/>
+		<preview url="preview.jpg" />
+		<image>
+			<cube url="pano_%s.jpg" />
+		</image>
+	</scene>
+</krpano>
